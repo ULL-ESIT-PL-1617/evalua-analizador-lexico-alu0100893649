@@ -10,8 +10,8 @@
 // Comments are ignored.
 
 RegExp.prototype.bexec = function(str) {
-  var i = this.lastIndex; //Da el índice en el que la string acaba según un patrón
-  var m = this.exec(str); //Da el índice de la string en la que deja de hacer un match
+  var i = this.lastIndex;
+  var m = this.exec(str);
   if (m && m.index == i) return m;
   return null;
 }
