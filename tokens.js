@@ -10,10 +10,10 @@
 // Comments are ignored.
 
 RegExp.prototype.bexec = function(str) {
-  _______________________
-  _______________________
-  ________________________________
-  ____________
+  var i = this.lastIndex; //Da el índice en el que la string acaba según un patrón
+  var m = this.exec(str); //Da el índice de la string en la que deja de hacer un match
+  if (m && m.index == i) return m;
+  return null;
 }
 
 String.prototype.tokens = function () {
@@ -23,14 +23,14 @@ String.prototype.tokens = function () {
     let m;                      // Matching
     let result = [];            // An array to hold the results.
 
-    const WHITES              = __________________
-    const ID                  = __________________
-    const NUM                 = ____________________________________
-    const STRING              = ___________________________________
-    const ONELINECOMMENT      = __________________
-    const MULTIPLELINECOMMENT = ___________________________________
-    const TWOCHAROPERATORS    = ____________________________________________________
-    const ONECHAROPERATORS    = ____________________________ 
+    const WHITES              = /\s+/g;
+    const ID                  = /[aA-zZ]\W*/g;
+    const NUM                 = /\b[-]?\d(\\.\d+)?([eE][-]?\d+)?\b/g;
+    const STRING              = /('[^']*'|"[^"]*")/g;
+    const ONELINECOMMENT      = /\/\/.*/g;
+    const MULTIPLELINECOMMENT = /\/\*(.|\n)*\*\//g;
+    const TWOCHAROPERATORS    = /(=== | !== | [+][+=] | -[-=] | =[=<>] | [<>][=<>] | && | [|][|])/g;
+    const ONECHAROPERATORS    = /([-+*\/=()&|;:,<>{}[\]])/g; 
     const tokens = [WHITES, ID, NUM, STRING, ONELINECOMMENT, 
                   MULTIPLELINECOMMENT, TWOCHAROPERATORS, ONECHAROPERATORS ];
 
@@ -56,7 +56,7 @@ String.prototype.tokens = function () {
 
     // Loop through this text
     while (i < this.length) {
-        tokens.forEach( _______________________________); // Synchronize lastIndex for all regexp
+        tokens.forEach( function(t) { t.lastIndex = i;} ); // Synchronize lastIndex for all regexp
         from = i;
         // Ignore whitespace and comments
         if (m = WHITES.bexec(this) || 
@@ -64,10 +64,10 @@ String.prototype.tokens = function () {
            (m = MULTIPLELINECOMMENT.bexec(this))) { getTok(); }
         // name.
         else if (m = ID.bexec(this)) {
-            result.push(______________________);
+            result.push(make('id', getTok()));
         } 
         // number.
-        else if (___________________) {
+        else if (m = NUM.bexec(this)) {
             n = +getTok();
 
             if (isFinite(n)) {
@@ -78,7 +78,7 @@ String.prototype.tokens = function () {
         } 
         // string
         else if (m = STRING.bexec(this)) {
-            result.push(_______________________.replace(/___________/g,'')));
+            result.push(make('string', getTok()).replace(/^['"]['"]$/g,''));
         } 
         // two char operator
         else if (m = TWOCHAROPERATORS.bexec(this)) {

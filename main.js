@@ -11,7 +11,7 @@ Object.constructor.prototype.error = function (message, t) {
 function main() {
     var parse = make_parse();
 
-    var source = _____.value;
+    var source = INPUT.value;
     var string, tree;
     try {
         tree = parse(source);
@@ -21,7 +21,7 @@ function main() {
         string = JSON.stringify(e, ['name', 'message', 'from', 'to', 'key',
                 'value', 'arity', 'first', 'second', 'third', 'fourth'], 4);
     }
-    ______.innerHTML = string.replace(/&/g, '&amp;').replace(/[<]/g, '&lt;');
+    OUTPUT.innerHTML = string.replace(/&/g, '&amp;').replace(/[<]/g, '&lt;');
 };
 
 window.onload = function() {
