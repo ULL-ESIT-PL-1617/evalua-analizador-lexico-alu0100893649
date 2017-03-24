@@ -24,7 +24,7 @@ String.prototype.tokens = function () {
     let result = [];            // An array to hold the results.
 
     const WHITES              = /\s+/g;
-    const ID                  = /[aA-zZ]\W*/g;
+    const ID                  = /[a-zA-Z]\w*/g;
     const NUM                 = /\b[-]?\d(\\.\d+)?([eE][-]?\d+)?\b/g;
     const STRING              = /('[^']*'|"[^"]*")/g;
     const ONELINECOMMENT      = /\/\/.*/g;
@@ -64,7 +64,7 @@ String.prototype.tokens = function () {
            (m = MULTIPLELINECOMMENT.bexec(this))) { getTok(); }
         // name.
         else if (m = ID.bexec(this)) {
-            result.push(make('id', getTok()));
+            result.push(make('name', getTok()));
         } 
         // number.
         else if (m = NUM.bexec(this)) {
@@ -78,7 +78,7 @@ String.prototype.tokens = function () {
         } 
         // string
         else if (m = STRING.bexec(this)) {
-            result.push(make('string', getTok()).replace(/^['"]['"]$/g,''));
+            result.push(make('string', getTok().replace(/^['"]['"]$/g,'')));
         } 
         // two char operator
         else if (m = TWOCHAROPERATORS.bexec(this)) {
